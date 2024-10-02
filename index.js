@@ -35,23 +35,15 @@ const getPage = async (url) => {
 
     const data = {} ;
 
-  surah:  for(let asz = 114; asz < 115; asz++){
+  surah:  for(let asz = 1; asz < 115; asz++){
     // const root = await parse(await getPage(`https://www.kuranmeali.com/AyetKarsilastirma.php?sure=${114}&ayet=${6}`));
     // const Mealler = await parse(root.querySelector('#Mealler'))
 
-
-
-    
-
-
     var cnt = 0;
-
             try {
-
            ayah: for(let utz= 1; utz < 300; utz++){
                     const root = await parse(await getPage(`https://www.kuranmeali.com/AyetKarsilastirma.php?sure=${asz}&ayet=${utz}`));
                     const Mealler = await parse(root.querySelector('#Mealler'))
-
 
                     // console.log(Mealler.childNodes[0].childNodes)
                     data[utz] = {}
@@ -64,7 +56,7 @@ const getPage = async (url) => {
                         arapca += Mealler.childNodes[0].childNodes[3].lastChild.firstChild.childNodes[0].childNodes[ou].innerHTML
                     }
 
-                    data[utz]["arabic"] = arapca
+                    data[utz]["Arabic"] = arapca
 
                     for(let uas = 5; uas < Mealler.childNodes[0].childNodes.length -1; uas++){
                         
