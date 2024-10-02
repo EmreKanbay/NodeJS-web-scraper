@@ -1,5 +1,5 @@
-import { parse } from 'node-html-parser';
-
+const { parse } = require('node-html-parser')
+const fs = require("fs")
 
 const getPage = async (url) => {
 
@@ -33,6 +33,76 @@ const getPage = async (url) => {
 
 (async ()=> {
 
-    console.log(await getPage("https://www.kuranmeali.com/AyetKarsilastirma.php?sure=2&ayet=16"))
+    const data = {} ;
+
+  surah:  for(let asz = 114; asz < 115; asz++){
+    // const root = await parse(await getPage(`https://www.kuranmeali.com/AyetKarsilastirma.php?sure=${114}&ayet=${6}`));
+    // const Mealler = await parse(root.querySelector('#Mealler'))
+
+
+
+    
+
+
+    var cnt = 0;
+
+            try {
+
+           ayah: for(let utz= 1; utz < 300; utz++){
+                    const root = await parse(await getPage(`https://www.kuranmeali.com/AyetKarsilastirma.php?sure=${asz}&ayet=${utz}`));
+                    const Mealler = await parse(root.querySelector('#Mealler'))
+
+
+                    // console.log(Mealler.childNodes[0].childNodes)
+                    data[utz] = {}
+
+                    var arapca = ""
+                    for(let ou= 0; ou < Mealler.childNodes[0].childNodes[3].lastChild.firstChild.childNodes[0].childNodes.length; ou++){
+
+                        if( typeof Mealler.childNodes[0].childNodes[3].lastChild.firstChild.childNodes[0].childNodes[ou].innerHTML == "undefined") continue
+                       
+                        arapca += Mealler.childNodes[0].childNodes[3].lastChild.firstChild.childNodes[0].childNodes[ou].innerHTML
+                    }
+
+                    data[utz]["arabic"] = arapca
+
+                    for(let uas = 5; uas < Mealler.childNodes[0].childNodes.length -1; uas++){
+                        
+                        data[utz][Mealler.childNodes[0].childNodes[uas].firstChild.firstChild.innerHTML] = Mealler.childNodes[0].childNodes[uas].lastChild.firstChild.firstChild.innerHTML
+                    }
+                   
+                    console.log(`${asz}:${utz}`)
+                    cnt++
+
+                    
+                }
+                
+            } catch (error) {
+
+                console.log(error)
+                if (cnt == 0) break surah
+                continue surah;
+
+            }
+        }
+fs.writeFileSync("surah.json",JSON.stringify(data))
+        console.log("FINISHED")
+
+            
+   
+
+
+  
+    
+    // for (let u = 5; u < Mealler.childNodes[0].childNodes.length -1; u++){
+
+    //     console.log(`${Mealler.childNodes[0].childNodes[u].firstChild.firstChild.innerHTML} \n`)
+    //     console.log(`${Mealler.childNodes[0].childNodes[u].lastChild.firstChild.firstChild.innerHTML} \n`)
+
+    
+
+
+ 
+    // }
 })()
 
